@@ -1,4 +1,8 @@
-# Nu primesc notă pentru că nu am pus titlu și descriere
+# Aplicatie de management al unei biblioteci
+
+Acesta aplicatie tine cont de titlurile fizice si digitale ale unei biblioteci si poate tine cont de starea acestora si a membrilor bibliotecii.
+
+Se pot verifica statusul fiecarui titlu si al membrilor, imprumuta si returna carti cu un sistem de penalizari pentru intarzieri si verifica raporturi despre activitate.
 
 ### Folosiți template-ul corespunzător grupei voastre!
 
