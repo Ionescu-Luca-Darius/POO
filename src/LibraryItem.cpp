@@ -3,21 +3,25 @@
 
 int LibraryItem::totalItemsCreated = 0;
 
-LibraryItem::LibraryItem() : title("Unknown"), author("Unknown"), year(0), checkedOut(false)
+LibraryItem::LibraryItem()
+    : title("Unknown"), author("Unknown"), year(0), checkedOut(false)
 {
     ++totalItemsCreated;
 }
 
-LibraryItem::LibraryItem(const std::string& title, const std::string& author, int year) : title(title), author(author), year(year), checkedOut(false)
+LibraryItem::LibraryItem(const std::string& t, const std::string& a, int y)
+    : title(t), author(a), year(y), checkedOut(false)
 {
-    if (title.empty())
+    if (t.empty())
         throw InvalidItemException("Title cannot be empty.");
-    if (year < 0 || year > 2100)
-        throw InvalidItemException("Year out of range: " + std::to_string(year));
+    if (y < 0 || y > 2100)
+        throw InvalidItemException("Year out of range: " + std::to_string(y));
     ++totalItemsCreated;
 }
 
-LibraryItem::LibraryItem(const LibraryItem& other) : title(other.title), author(other.author), year(other.year), checkedOut(other.checkedOut)
+LibraryItem::LibraryItem(const LibraryItem& other)
+    : title(other.title), author(other.author),
+      year(other.year), checkedOut(other.checkedOut)
 {
     ++totalItemsCreated;
 }
@@ -44,12 +48,9 @@ void LibraryItem::returnItem() {
     checkedOut = false;
 }
 
-const std::string& LibraryItem::getTitle() const { return title; }
-
+const std::string& LibraryItem::getTitle()  const { return title; }
 const std::string& LibraryItem::getAuthor() const { return author; }
-
-int  LibraryItem::getYear() const { return year; }
-
+int LibraryItem::getYear() const { return year; }
 bool LibraryItem::isCheckedOut() const { return checkedOut; }
 
 int LibraryItem::getTotalItemsCreated() { return totalItemsCreated; }
@@ -57,14 +58,14 @@ int LibraryItem::getTotalItemsCreated() { return totalItemsCreated; }
 bool LibraryItem::operator==(const LibraryItem& other) const {
     return title == other.title && author == other.author;
 }
-
 bool LibraryItem::operator<(const LibraryItem& other) const {
     return title < other.title;
 }
 
 std::ostream& operator<<(std::ostream& os, const LibraryItem& item) {
-    os << "[" << item.getType() << "] \"" << item.title
-       << "\" by " << item.author << " (" << item.year << ")"
+    os << "[" << item.getType() << "] \""
+       << item.title << "\" by " << item.author
+       << " (" << item.year << ")"
        << (item.checkedOut ? " [CHECKED OUT]" : " [AVAILABLE]");
     return os;
 }

@@ -2,15 +2,20 @@
 #include "LibraryException.h"
 #include <iostream>
 
+PhysicalLoanPolicy Book::policy;
+
 Book::Book() : LibraryItem(), isbn("000-0000000000"), pageCount(0) {}
 
-Book::Book(const std::string& title, const std::string& author, int year, const std::string& isbn, int pageCount) : LibraryItem(title, author, year), isbn(isbn), pageCount(pageCount)
+Book::Book(const std::string& title, const std::string& author,
+           int year, const std::string& isbn, int pageCount)
+    : LibraryItem(title, author, year), isbn(isbn), pageCount(pageCount)
 {
     if (pageCount < 0)
         throw InvalidItemException("Page count cannot be negative.");
 }
 
-Book::Book(const Book& other) : LibraryItem(other), isbn(other.isbn), pageCount(other.pageCount) {}
+Book::Book(const Book& other)
+    : LibraryItem(other), isbn(other.isbn), pageCount(other.pageCount) {}
 
 Book& Book::operator=(const Book& other) {
     if (this != &other) {
@@ -24,16 +29,16 @@ Book& Book::operator=(const Book& other) {
 Book::~Book() = default;
 
 std::string Book::getType() const { return "Book"; }
+const LoanPolicy& Book::getLoanPolicy() const { return policy; }
 
 void Book::displayDetails() const {
     std::cout << *this << "\n"
-              << "   ISBN: " << isbn
-              << "  Pages: " << pageCount << "\n";
+              << "   ISBN: " << isbn << "  Pages: " << pageCount
+              << "  Policy: " << policy.getPolicyName() << "\n";
 }
 
-const std::string& Book::getIsbn() const { return isbn; }
-
-int Book::getPageCount() const { return pageCount; }
+const std::string& Book::getIsbn() const { return isbn;}
+int Book::getPageCount() const { return pageCount;}
 
 bool Book::operator>(const Book& other) const {
     return pageCount > other.pageCount;

@@ -2,21 +2,29 @@
 #include "LibraryException.h"
 #include <iostream>
 
-AudioBook::AudioBook() : DigitalItem(), durationHours(0.0), narrator("Unknown") {}
+AudioBook::AudioBook()
+    : DigitalItem(), durationHours(0.0), narrator("Unknown") {}
 
-AudioBook::AudioBook(const std::string& title, const std::string& author, int year, const std::string& fileFormat, double fileSizeMB, double durationHours, const std::string& narrator) : DigitalItem(title, author, year, fileFormat, fileSizeMB), durationHours(durationHours), narrator(narrator)
+AudioBook::AudioBook(const std::string& title, const std::string& author,
+                     int year, const std::string& fileFormat,
+                     double fileSizeMB, double durationHours,
+                     const std::string& narrator)
+    : DigitalItem(title, author, year, fileFormat, fileSizeMB),
+      durationHours(durationHours), narrator(narrator)
 {
     if (durationHours < 0)
         throw InvalidItemException("Duration cannot be negative.");
 }
 
-AudioBook::AudioBook(const AudioBook& other) : DigitalItem(other), durationHours(other.durationHours), narrator(other.narrator) {}
+AudioBook::AudioBook(const AudioBook& other)
+    : DigitalItem(other),
+      durationHours(other.durationHours), narrator(other.narrator) {}
 
 AudioBook& AudioBook::operator=(const AudioBook& other) {
     if (this != &other) {
         DigitalItem::operator=(other);
         durationHours = other.durationHours;
-        narrator      = other.narrator;
+        narrator = other.narrator;
     }
     return *this;
 }
@@ -28,12 +36,12 @@ std::string AudioBook::getType() const { return "AudioBook"; }
 void AudioBook::displayDetails() const {
     std::cout << *this << "\n"
               << "   Duration: " << durationHours << "h"
-              << "  Narrator: " << narrator << "\n";
+              << "  Narrator: " << narrator
+              << "  Policy: " << getLoanPolicy().getPolicyName() << "\n";
 }
 
 double AudioBook::getDurationHours() const { return durationHours; }
-
-const std::string& AudioBook::getNarrator() const { return narrator; }
+const std::string& AudioBook::getNarrator() const { return narrator;}
 
 std::ostream& operator<<(std::ostream& os, const AudioBook& a) {
     os << static_cast<const DigitalItem&>(a)

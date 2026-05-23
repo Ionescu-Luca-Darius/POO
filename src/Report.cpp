@@ -3,73 +3,61 @@
 #include <vector>
 #include <algorithm>
 
-Report::Report(const Library& lib, const LoanManager& lm) : library(lib), loanManager(lm) {}
+Report::Report(const Library& lib, const LoanManager& lm)
+    : library(lib), loanManager(lm) {}
 
-static void printSeparator(char c = '-', int w = 50) {
+void Report::printSeparator(char c, int w) {
     for (int i = 0; i < w; ++i) std::cout << c;
     std::cout << "\n";
 }
 
-void Report::printFullReport() const {
+FullReport::FullReport(const Library& lib, const LoanManager& lm)
+    : Report(lib, lm) {}
+
+void FullReport::generate() const {
     printSeparator('=');
-    std::cout << "  FULL LIBRARY REPORT\n";
+    std::cout << "  " << getReportName() << "\n";
     printSeparator('=');
+
     std::cout << "\n[COLLECTION]\n";
-    std::cout << "  Total items in library : " << library.size() << "\n";
-    std::cout << "  Total items ever created: "
-              << LibraryItem::getTotalItemsCreated() << "\n";
-    std::cout << "  Total checkouts (session): "
-              << Library::getTotalCheckouts() << "\n";
+    std::cout << "  Items in library       : " << library.size() << "\n";
+    std::cout << "  Total ever created     : " << LibraryItem::getTotalItemsCreated() << "\n";
+    std::cout << "  Session checkouts      : " << Library::getTotalCheckouts() << "\n";
 
     std::cout << "\n[MEMBERS]\n";
-    const auto& members = loanManager.getMembers();
-    std::cout << "  Registered members: " << members.size() << "\n";
-    int membersWithFines = 0;
-    for (const auto* m : members)
-        if (m->getFineOwed() > 0) ++membersWithFines;
-    std::cout << "  Members with unpaid fines: " << membersWithFines << "\n";
+    int students = 0, faculty = 0, withFines = 0;
+    for (const auto& [id, m] : loanManager.getMembers()) {
+        if (m->getMemberType() == "Student") ++students;
+        else ++faculty;
+        if (m->getFineOwed() > 0) ++withFines;
+    }
+    std::cout << "  Students               : " << students << "\n";
+    std::cout << "  Faculty                : " << faculty  << "\n";
+    std::cout << "  Members with fines     : " << withFines << "\n";
 
     std::cout << "\n[LOANS]\n";
-    std::cout << "  Total loans ever: " << loanManager.totalLoans() << "\n";
-    std::cout << "  Currently active: " << loanManager.activeLoans() << "\n";
-    std::cout << "  Fines collected : " << loanManager.totalFinesCollected() << " RON\n";
-    std::cout << "  Fines pending   : " << loanManager.totalFinesPending()   << " RON\n";
-
+    std::cout << "  Total loans            : " << loanManager.totalLoans() << "\n";
+    std::cout << "  Active                 : " << loanManager.activeLoansCount() << "\n";
+    std::cout << "  Fines collected (RON)  : " << loanManager.totalFinesCollected() << "\n";
+    std::cout << "  Fines pending   (RON)  : " << loanManager.totalFinesPending() << "\n";
     printSeparator('=');
 }
 
-void Report::printCheckedOutReport() const {
+FinesReport::FinesReport(const Library& lib, const LoanManager& lm)
+    : Report(lib, lm) {}
+
+void FinesReport::generate() const {
     printSeparator();
-    std::cout << "  CURRENTLY CHECKED-OUT ITEMS\n";
+    std::cout << "  " << getReportName() << "\n";
     printSeparator();
 
-    const auto& loans = loanManager.getLoans();
-    bool any = false;
-    for (const auto* l : loans) {
-        if (l->isActive()) {
-            std::cout << "  \"" << l->getItemTitle() << "\""
-                      << "  ->  " << l->getMemberName()
-                      << "  (due: " << l->getDueDate() << ")\n";
-            any = true;
-        }
-    }
-    if (!any) std::cout << "  No items currently checked out.\n";
-    printSeparator();
-}
-
-void Report::printFinesReport() const {
-    printSeparator();
-    std::cout << "  UNPAID FINES REPORT\n";
-    printSeparator();
-
-    const auto& members = loanManager.getMembers();
     std::vector<const Member*> withFines;
-    for (const auto* m : members)
+    for (const auto& [id, m] : loanManager.getMembers())
         if (m->getFineOwed() > 0.0)
             withFines.push_back(m);
 
     if (withFines.empty()) {
-        std::cout << "  No unpaid fines. Everyone is square!\n";
+        std::cout << "  No unpaid fines.\n";
         printSeparator();
         return;
     }
@@ -80,36 +68,31 @@ void Report::printFinesReport() const {
         });
 
     for (const auto* m : withFines)
-        std::cout << "  " << m->getName()
-                  << "  ->  " << m->getFineOwed() << " RON\n";
+        std::cout << "  [" << m->getMemberType() << "] " << m->getName()
+                  << "  ->  " << m->getFineOwed() << " RON"
+                  << "  (grace days: " << m->getExtraGraceDays() << ")\n";
+
     printSeparator();
 }
 
-void Report::printOverdueReport() const {
+OverdueReport::OverdueReport(const Library& lib, const LoanManager& lm)
+    : Report(lib, lm) {}
+
+void OverdueReport::generate() const {
     printSeparator();
-    std::cout << "  OVERDUE LOANS REPORT\n";
+    std::cout << "  " << getReportName() << "\n";
     printSeparator();
 
-    const auto& loans = loanManager.getLoans();
     bool any = false;
-    for (const auto* l : loans) {
-        if (l->getStatus() == LoanStatus::OVERDUE) {
-            std::cout << "  [OVERDUE] \"" << l->getItemTitle() << "\""
-                      << "  Member: " << l->getMemberName()
-                      << "  Due: " << l->getDueDate() << "\n";
+    for (const auto& l : loanManager.getLoans()) {
+        if (l.getStatus() == LoanStatus::OVERDUE) {
+            std::cout << "  \"" << l.getItemTitle() << "\""
+                      << "  Borrower: " << l.getMemberName()
+                      << "  Due: " << l.getDueDate()
+                      << "  Rate: " << l.getFinePerDay() << " RON/day\n";
             any = true;
         }
     }
     if (!any) std::cout << "  No overdue loans.\n";
     printSeparator();
-}
-
-void Report::printDailySummary(const std::string& date) const {
-    std::cout << "\n  Daily Summary [" << date << "]"
-              << "  Library: " << library.getName() << "\n";
-    std::cout << "  Items: " << library.size()
-              << "  |  Active loans: " << loanManager.activeLoans()
-              << "  |  Members: " << loanManager.getMembers().size()
-              << "  |  Checkouts today (session): " << Library::getTotalCheckouts()
-              << "\n";
 }
