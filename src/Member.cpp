@@ -17,7 +17,7 @@ Member::Member(const std::string& n, const std::string& e, const std::string& p)
 }
 
 Member::Member(const Member& other)
-    : memberId(other.memberId), name(other.name), email(other.email),
+    : memberId(nextId++), name(other.name), email(other.email),
       phone(other.phone), activeLoans(other.activeLoans), fineOwed(other.fineOwed) {}
 
 Member& Member::operator=(const Member& other) {
