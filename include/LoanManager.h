@@ -1,16 +1,18 @@
 #pragma once
 #include "Loan.h"
 #include "Member.h"
+#include "LibraryItem.h"
+#include <list>
+#include <map>
 #include <vector>
 #include <string>
 
 class LoanManager {
 private:
-    std::vector<Loan*> loans;
-    std::vector<Member*> members;
+    std::map<int, Member*> members;
+    std::list<Loan> loans;
 
-    Member* findMemberById(int id) const;
-    Member* findMemberByName(const std::string&) const;
+    Member* findMember(int id) const;
 
 public:
     LoanManager();
@@ -18,26 +20,26 @@ public:
 
     void registerMember(Member* m);
     Member* getMember(int memberId) const;
-    Member* getMemberByName(const std::string& name) const;
     void displayAllMembers() const;
 
-    int  createLoan(int memberId, const std::string& itemTitle, const std::string& borrowDate, const std::string& dueDate);
+    int createLoan(int memberId, LibraryItem* item, const std::string& borrowDate);
 
-    void closeLoan(int loanId, const std::string& returnDate, int daysLate = 0);
+    void closeLoan(int loanId, const std::string& returnDate, int daysLate);
 
     void markOverdueLoans(const std::string& today);
 
+    void printLoanItemInfo(int loanId, const std::vector<LibraryItem*>& allItems) const;
+
     void displayActiveLoans() const;
-    void displayReturnedLoans() const;
     void displayOverdueLoans() const;
     void displayAllLoans() const;
     void displayMemberLoans(int memberId) const;
 
     int totalLoans() const;
-    int activeLoans() const;
+    int activeLoansCount() const;
     double totalFinesCollected() const;
     double totalFinesPending() const;
 
-    const std::vector<Loan*>& getLoans() const { return loans; }
-    const std::vector<Member*>& getMembers() const { return members; }
+    const std::list<Loan>& getLoans() const { return loans;}
+    const std::map<int, Member*>& getMembers() const { return members;}
 };

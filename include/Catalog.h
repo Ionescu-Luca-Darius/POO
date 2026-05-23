@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <iostream>
 
+
 template <typename T>
 class Catalog {
 private:
@@ -52,6 +53,6 @@ public:
             std::cout << *item << "\n";
     }
 
-    int size() const { return static_cast<int>(items.size()); }
+    int  size() const { return static_cast<int>(items.size()); }
     const std::string& getName() const { return catalogName; }
 };

@@ -4,20 +4,38 @@
 #include <string>
 
 class Report {
-private:
+protected:
     const Library& library;
     const LoanManager& loanManager;
 
+    static void printSeparator(char c = '-', int w = 50);
+
 public:
     Report(const Library& lib, const LoanManager& lm);
+    virtual ~Report() = default;
 
-    void printFullReport() const;
+    virtual void generate() const = 0;
 
-    void printCheckedOutReport() const;
+    virtual std::string getReportName() const = 0;
+};
 
-    void printFinesReport() const;
+class FullReport : public Report {
+public:
+    FullReport(const Library& lib, const LoanManager& lm);
+    void generate() const override;
+    std::string getReportName()  const override { return "Full Library Report"; }
+};
 
-    void printOverdueReport() const;
+class FinesReport : public Report {
+public:
+    FinesReport(const Library& lib, const LoanManager& lm);
+    void generate() const override;
+    std::string getReportName() const override { return "Unpaid Fines Report"; }
+};
 
-    void printDailySummary(const std::string& date) const;
+class OverdueReport : public Report {
+public:
+    OverdueReport(const Library& lib, const LoanManager& lm);
+    void generate() const override;
+    std::string getReportName()  const override { return "Overdue Loans Report"; }
 };

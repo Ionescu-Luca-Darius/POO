@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include "LoanPolicy.h"
 
 class LibraryItem {
 protected:
@@ -8,10 +9,10 @@ protected:
     std::string author;
     int year;
     bool checkedOut;
-    static int totalItemsCreated;   
+
+    static int totalItemsCreated;
 
 public:
-   
     LibraryItem();
     LibraryItem(const std::string& title, const std::string& author, int year);
     LibraryItem(const LibraryItem& other);
@@ -21,6 +22,8 @@ public:
     virtual std::string getType() const = 0;
     virtual void displayDetails() const = 0;
 
+    virtual const LoanPolicy& getLoanPolicy() const = 0;
+
     virtual void checkOut();
     virtual void returnItem();
 
@@ -29,10 +32,8 @@ public:
     int getYear() const;
     bool isCheckedOut() const;
 
-    
     static int getTotalItemsCreated();
 
-    
     bool operator==(const LibraryItem& other) const;
     bool operator<(const LibraryItem& other) const;
 

@@ -3,18 +3,23 @@
 
 class DigitalItem : public LibraryItem {
 protected:
-    std::string fileFormat;   
+    std::string fileFormat;
     double fileSizeMB;
+
+    static DigitalLoanPolicy policy;
 
 public:
     DigitalItem();
-    DigitalItem(const std::string& title, const std::string& author, int year, const std::string& fileFormat, double fileSizeMB);
+    DigitalItem(const std::string& title, const std::string& author,
+                int year, const std::string& fileFormat, double fileSizeMB);
     DigitalItem(const DigitalItem& other);
     DigitalItem& operator=(const DigitalItem& other);
     ~DigitalItem() override;
 
     void checkOut() override;
     void returnItem() override;
+
+    const LoanPolicy& getLoanPolicy() const override;
 
     const std::string& getFileFormat() const;
     double getFileSizeMB() const;

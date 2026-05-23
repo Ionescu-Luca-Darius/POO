@@ -4,17 +4,21 @@
 class Magazine : public LibraryItem {
 private:
     int issueNumber;
-    std::string category;   
+    std::string category;
+
+    static ReferenceLoanPolicy policy;
 
 public:
     Magazine();
-    Magazine(const std::string& title, const std::string& author, int year, int issueNumber, const std::string& category);
+    Magazine(const std::string& title, const std::string& author,
+             int year, int issueNumber, const std::string& category);
     Magazine(const Magazine& other);
     Magazine& operator=(const Magazine& other);
     ~Magazine() override;
 
     std::string getType() const override;
     void displayDetails() const override;
+    const LoanPolicy& getLoanPolicy() const override;
 
     int getIssueNumber() const;
     const std::string& getCategory() const;

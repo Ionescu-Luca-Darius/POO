@@ -2,11 +2,7 @@
 #include <string>
 #include <iostream>
 
-enum class LoanStatus {
-    ACTIVE,
-    RETURNED,
-    OVERDUE
-};
+enum class LoanStatus { ACTIVE, RETURNED, OVERDUE };
 
 std::string loanStatusToString(LoanStatus s);
 
@@ -19,15 +15,18 @@ private:
     std::string borrowDate;
     std::string dueDate;
     std::string returnDate;
-    LoanStatus status;
+    LoanStatus  status;
     double fineAmount;
+    double finePerDay;
 
     static int nextLoanId;
-    static const double FINE_PER_DAY;
 
 public:
     Loan();
-    Loan(int memberId, const std::string& memberName, const std::string& itemTitle, const std::string& borrowDate, const std::string& dueDate);
+    Loan(int memberId, const std::string& memberName,
+         const std::string& itemTitle,
+         const std::string& borrowDate, const std::string& dueDate,
+         double finePerDay = 0.50);
     Loan(const Loan& other);
     Loan& operator=(const Loan& other);
     ~Loan();
@@ -41,11 +40,10 @@ public:
     const std::string& getReturnDate() const;
     LoanStatus getStatus() const;
     double getFineAmount() const;
+    double getFinePerDay() const;
 
     void markReturned(const std::string& returnDate, int daysLate = 0);
-
     void markOverdue();
-
     bool isActive() const;
 
     bool operator==(const Loan& other) const;
