@@ -103,7 +103,7 @@ FacultyMember& FacultyMember::operator=(const FacultyMember& other) {
 FacultyMember::~FacultyMember() = default;
 
 const std::string& FacultyMember::getDepartment() const { return department; }
-// cppcheck-suppress unusedFunction
+
 bool sameDepartment(const FacultyMember& a, const FacultyMember& b) {
     return a.getDepartment() == b.getDepartment();
 }
