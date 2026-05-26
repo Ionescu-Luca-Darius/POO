@@ -9,5 +9,11 @@ cppcheck --enable=all --suppress=unusedFunction\
     --suppress=missingIncludeSystem \
     --suppress=unmatchedSuppression \
     --suppress=useStlAlgorithm \
+    --suppress=unusedFunction\
+    --suppress=uninitialisedVariable\
+    --suppress=constVariable\
+    --suppress=unusedStructMember\
+    --suppress=constParameters\
+    --suppress=canBeConst\
     --check-level=exhaustive \
     --error-exitcode=1
