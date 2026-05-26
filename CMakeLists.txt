@@ -50,6 +50,7 @@ function(detect_libcpp)
     try_compile(HAS_LIBCPP SOURCE_FROM_CONTENT test_stdlib.cpp ${TEST_STDLIB_SRC})
     set(CMAKE_CXX_FLAGS ${OLD_CMAKE_CXX_FLAGS})
     unset(OLD_CMAKE_CXX_FLAGS)
+    set(HAS_LIBCPP ${HAS_LIBCPP} PARENT_SCOPE)
 endfunction()
 
 

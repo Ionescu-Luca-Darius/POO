@@ -92,15 +92,15 @@ static void loadSampleData(Library* lib, LoanManager& lm) {
     lm.registerMember(new FacultyMember("Dan Marinescu",     "dan@uni.ro",    "0721000004", "Mathematics"));
 
     try {
-        LibraryItem* cleanCode = lib->findItem("Clean Code");
+        const LibraryItem* cleanCode = lib->findItem("Clean Code");
         lib->checkOutItem("Clean Code");
         lm.createLoan(1000, cleanCode, "2025-03-01");
 
-        LibraryItem* atomicHabits = lib->findItem("Atomic Habits");
+        const LibraryItem* atomicHabits = lib->findItem("Atomic Habits");
         lib->checkOutItem("Atomic Habits");
         lm.createLoan(1001, atomicHabits, "2025-04-10");
 
-        LibraryItem* wired = lib->findItem("Wired");
+        const LibraryItem* wired = lib->findItem("Wired");
         lib->checkOutItem("Wired");
         lm.createLoan(1002, wired, "2025-04-20");
     } catch (const LibraryException& e) {
@@ -163,7 +163,7 @@ int main() {
             int memId = readInt( "  Member ID     : ");
             std::string date = readLine("  Borrow date (YYYY-MM-DD): ");
             try {
-                LibraryItem* item = lib->findItem(title);
+                const LibraryItem* item = lib->findItem(title);
 
                 lib->checkOutItem(title);
 
@@ -225,7 +225,7 @@ int main() {
         case 14: {
             int id = readInt("  Member ID: ");
             try {
-                Member* m = loanManager.getMember(id);
+                const Member* m = loanManager.getMember(id);
                 std::cout << "\n  Member: " << m->getName()
                           << " [" << m->getMemberType() << "]\n";
                 std::cout << "  Max loans      : " << m->getMaxLoans() << "\n";
@@ -234,7 +234,7 @@ int main() {
                 std::cout << "  Can request    : " << (m->canRequestPurchase() ? "yes" : "no") << "\n";
                 std::cout << "  Can borrow now : " << (m->canBorrow() ? "yes" : "no") << "\n";
 
-                FacultyMember* fm = dynamic_cast<FacultyMember*>(m);
+                const FacultyMember* fm = dynamic_cast<const FacultyMember*>(m);
                 if (fm)
                     std::cout << "  Department     : " << fm->getDepartment() << "\n";
             } catch (const LibraryException& e) { std::cout << "  " << e.what() << "\n"; }
@@ -275,7 +275,7 @@ int main() {
 
         case 23:
             std::cout << "\n=== Running all reports ===\n";
-            for (Report* r : reports) {
+            for (const Report* r : reports) {
                 std::cout << "\n>> " << r->getReportName() << "\n";
                 r->generate();
             }
