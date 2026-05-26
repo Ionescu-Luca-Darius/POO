@@ -22,7 +22,7 @@ public:
     Member* getMember(int memberId) const;
     void displayAllMembers() const;
 
-    int createLoan(int memberId, LibraryItem* item, const std::string& borrowDate);
+    int createLoan(int memberId, const LibraryItem* item, const std::string& borrowDate);
 
     void closeLoan(int loanId, const std::string& returnDate, int daysLate);
 
