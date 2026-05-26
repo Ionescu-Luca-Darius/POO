@@ -66,15 +66,33 @@ function(set_custom_stdlib_and_sanitizers target add_apple_asan)
     endif()
 
     if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" AND NOT WIN32)
-        detect_libcpp()
-        if(HAS_LIBCPP)
-            # see also https://stackoverflow.com/a/70382484
-            target_compile_options(${target} PRIVATE -stdlib=libc++)
-            target_link_options(${target} PRIVATE -stdlib=libc++)
+        if(USE_MSAN)
+            # For MSan, we must use the custom-built MSan-instrumented libc++
+            # from tools/llvm-project/build, NOT the system libc++.
+            # The rpath is set below in the USE_MSAN block so the binary
+            # finds these libs at runtime.
+            set(MSAN_LIBCXX_DIR "${CMAKE_SOURCE_DIR}/tools/llvm-project/build")
+            target_compile_options(${target} PRIVATE
+                -stdlib=libc++
+                -nostdinc++
+                "-I${MSAN_LIBCXX_DIR}/include/c++/v1"
+            )
+            target_link_options(${target} PRIVATE
+                -stdlib=libc++
+                "-L${MSAN_LIBCXX_DIR}/lib"
+                "-Wl,-rpath,${MSAN_LIBCXX_DIR}/lib"
+            )
         else()
-            # fall back to libstdc++
-            target_compile_options(${target} PRIVATE -stdlib=libstdc++)
-            target_link_options(${target} PRIVATE -stdlib=libstdc++)
+            detect_libcpp()
+            if(HAS_LIBCPP)
+                # see also https://stackoverflow.com/a/70382484
+                target_compile_options(${target} PRIVATE -stdlib=libc++)
+                target_link_options(${target} PRIVATE -stdlib=libc++)
+            else()
+                # fall back to libstdc++
+                target_compile_options(${target} PRIVATE -stdlib=libstdc++)
+                target_link_options(${target} PRIVATE -stdlib=libstdc++)
+            endif()
         endif()
     endif()
 
@@ -96,7 +114,7 @@ function(set_custom_stdlib_and_sanitizers target add_apple_asan)
             # use semi-colons instead of spaces to separate arguments
             # it is recommended to quote generator expressions in order to avoid unintentional splitting
             target_compile_options(${target} PRIVATE "$<${debug_mode}:-fsanitize=memory,undefined;-fsanitize-recover=memory,undefined;-fsanitize-memory-track-origins>")
-            target_link_options(${target} PRIVATE "$<${debug_mode}:-fsanitize=memory,undefined;-fsanitize-recover=memory,undefined;-fsanitize-memory-track-origins;-Wl,-rpath,tools/llvm-project/build/lib>")
+            target_link_options(${target} PRIVATE "$<${debug_mode}:-fsanitize=memory,undefined;-fsanitize-recover=memory,undefined;-fsanitize-memory-track-origins>")
         endif()
     endif()
 endfunction()
