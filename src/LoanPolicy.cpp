@@ -9,7 +9,7 @@ std::string LoanPolicy::computeDueDate(const std::string& borrowDate) const {
 
     day += getLoanDurationDays();
 
-    int daysInMonth[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
+    const int daysInMonth[] = {0,31,28,31,30,31,30,31,31,30,31,30,31};
 
     while (day > daysInMonth[month]) {
         day -= daysInMonth[month];

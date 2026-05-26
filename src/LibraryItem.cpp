@@ -49,7 +49,9 @@ void LibraryItem::returnItem() {
 }
 
 const std::string& LibraryItem::getTitle()  const { return title; }
+// cppcheck-suppress unusedFunction
 const std::string& LibraryItem::getAuthor() const { return author; }
+// cppcheck-suppress unusedFunction
 int LibraryItem::getYear() const { return year; }
 bool LibraryItem::isCheckedOut() const { return checkedOut; }
 

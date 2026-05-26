@@ -17,11 +17,12 @@ Member::Member(const std::string& n, const std::string& e, const std::string& p)
 }
 
 Member::Member(const Member& other)
-    : memberId(other.memberId), name(other.name), email(other.email),
+    : memberId(nextId++), name(other.name), email(other.email),
       phone(other.phone), activeLoans(other.activeLoans), fineOwed(other.fineOwed) {}
 
 Member& Member::operator=(const Member& other) {
     if (this != &other) {
+        memberId = other.memberId;
         name = other.name;
         email = other.email;
         phone = other.phone;
@@ -35,7 +36,9 @@ Member::~Member() = default;
 
 int Member::getMemberId() const { return memberId;}
 const std::string& Member::getName() const { return name;}
+// cppcheck-suppress unusedFunction
 const std::string& Member::getEmail() const { return email;}
+// cppcheck-suppress unusedFunction
 const std::string& Member::getPhone() const { return phone;}
 int Member::getActiveLoans() const { return activeLoans;}
 double Member::getFineOwed() const { return fineOwed;}
@@ -104,6 +107,7 @@ FacultyMember::~FacultyMember() = default;
 
 const std::string& FacultyMember::getDepartment() const { return department; }
 
+// cppcheck-suppress unusedFunction
 bool sameDepartment(const FacultyMember& a, const FacultyMember& b) {
     return a.getDepartment() == b.getDepartment();
 }

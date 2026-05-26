@@ -37,6 +37,7 @@ void DigitalItem::returnItem() { checkedOut = false; }
 const LoanPolicy& DigitalItem::getLoanPolicy() const { return policy; }
 
 const std::string& DigitalItem::getFileFormat() const { return fileFormat;  }
+// cppcheck-suppress unusedFunction
 double DigitalItem::getFileSizeMB()  const { return fileSizeMB; }
 
 std::ostream& operator<<(std::ostream& os, const DigitalItem& d) {

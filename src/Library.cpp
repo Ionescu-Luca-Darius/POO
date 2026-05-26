@@ -60,6 +60,7 @@ void Library::addItem(LibraryItem* item) {
     items.push_back(item);
 }
 
+// cppcheck-suppress unusedFunction
 void Library::removeItem(const std::string& title) {
     auto it = std::find_if(items.begin(), items.end(),
         [&title](const LibraryItem* i) { return i->getTitle() == title; });
@@ -129,6 +130,7 @@ void Library::sortByTitle() {
 }
 
 void Library::addObserver(LibraryObserver* obs)    { observers.push_back(obs); }
+// cppcheck-suppress unusedFunction
 void Library::removeObserver(LibraryObserver* obs) {
     observers.erase(std::remove(observers.begin(), observers.end(), obs),
                     observers.end());

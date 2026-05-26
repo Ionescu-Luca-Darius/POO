@@ -39,7 +39,7 @@ void LoanManager::displayAllMembers() const {
         std::cout << "  " << *m << "\n";
 }
 
-int LoanManager::createLoan(int memberId, LibraryItem* item,
+int LoanManager::createLoan(int memberId, const LibraryItem* item,
                              const std::string& borrowDate) {
     Member* m = findMember(memberId);
 
@@ -112,7 +112,7 @@ void LoanManager::printLoanItemInfo(int loanId,
         return;
     }
 
-    LibraryItem* item = nullptr;
+    const LibraryItem* item = nullptr;
     for (auto* i : allItems)
         if (i->getTitle() == found->getItemTitle()) { item = i; break; }
 
@@ -168,7 +168,7 @@ void LoanManager::displayAllLoans() const {
 }
 
 void LoanManager::displayMemberLoans(int memberId) const {
-    Member* m = findMember(memberId);
+    const Member* m = findMember(memberId);
     std::cout << "\n--- Loans for " << m->getName() << " ---\n";
     bool any = false;
     for (const auto& l : loans)

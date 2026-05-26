@@ -34,6 +34,7 @@ Loan::Loan(const Loan& other)
 
 Loan& Loan::operator=(const Loan& other) {
     if (this != &other) {
+        loanId = other.loanId;
         memberId = other.memberId;
         memberName = other.memberName;
         itemTitle = other.itemTitle;
@@ -53,8 +54,10 @@ int Loan::getLoanId() const { return loanId;}
 int Loan::getMemberId() const { return memberId;}
 const std::string& Loan::getMemberName() const { return memberName;}
 const std::string& Loan::getItemTitle() const { return itemTitle;}
+// cppcheck-suppress unusedFunction
 const std::string& Loan::getBorrowDate() const { return borrowDate;}
 const std::string& Loan::getDueDate() const { return dueDate;}
+// cppcheck-suppress unusedFunction
 const std::string& Loan::getReturnDate() const { return returnDate;}
 LoanStatus Loan::getStatus() const { return status;}
 double Loan::getFineAmount() const { return fineAmount;}
